@@ -13,7 +13,9 @@ var (
 	db          *gorm.DB            = config.SetupDatabaseConnection()
 	userRepo    repo.UserRepository = repo.NewUserRepo(db)
 	authService service.AuthService = service.NewAuthService(userRepo)
-	authHandler v1.authHandler      = v1.NewAuthHandler(authService)
+	jwtService  service.JWTService  = service.NewJWTService()
+	userService service.UserService = service.NewUserService(userRepo)
+	authHandler v1.AuthHandler      = v1.NewAuthHandler(authService, jwtService, userService)
 )
 
 func main() {
@@ -22,8 +24,13 @@ func main() {
 
 	authRoutes := server.Group("api/auth")
 	{
-		authRoutes.POST("login")
-		authRoutes.POST("register")
+		authRoutes.POST("login", authHandler.Login)
+		authRoutes.POST("register", authHandler.Register)
+	}
+
+	checkRoutes := server.Group("api/check")
+	{
+		checkRoutes.GET("health", v1.Health)
 	}
 
 	server.Run()

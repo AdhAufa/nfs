@@ -1,15 +1,16 @@
 package repo
 
 import (
+	"log"
+
 	"github.com/adhaufa/nfs/entity"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 type UserRepository interface {
 	InsertUser(user entity.User) (entity.User, error)
 	UpdateUser(user entity.User) (entity.User, error)
-	VerifyCredential(email string, password string) error
-	IsDuplicateEmail(email string) error
 	FindByEmail(email string) (entity.User, error)
 	ProfileUser(userID int) (entity.User, error)
 }
@@ -25,25 +26,33 @@ func NewUserRepo(connection *gorm.DB) UserRepository {
 }
 
 func (c *userRepo) InsertUser(user entity.User) (entity.User, error) {
-	return entity.User{}, nil
+	user.Password = hashAndSalt([]byte(user.Password))
+	c.connection.Save(&user)
+	return user, nil
 }
 
 func (c *userRepo) UpdateUser(user entity.User) (entity.User, error) {
 	return entity.User{}, nil
 }
 
-func (c *userRepo) VerifyCredential(email string, password string) error {
-	return nil
-}
-
-func (c *userRepo) IsDuplicateEmail(email string) error {
-	return nil
-}
-
 func (c *userRepo) FindByEmail(email string) (entity.User, error) {
-	return entity.User{}, nil
+	var user entity.User
+	res := c.connection.Where("email = ?", email).Take(&user)
+	if res.Error != nil {
+		return user, res.Error
+	}
+	return user, nil
 }
 
 func (c *userRepo) ProfileUser(userID int) (entity.User, error) {
 	return entity.User{}, nil
+}
+
+func hashAndSalt(pwd []byte) string {
+	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+		panic("Failed to hash a password")
+	}
+	return string(hash)
 }

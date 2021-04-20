@@ -1,15 +1,16 @@
 package service
 
 import (
-	"github.com/adhaufa/nfs/entity"
+	"errors"
+	"log"
+
 	"github.com/adhaufa/nfs/repo"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService interface {
 	VerifyCredential(email string, password string) error
 	// CreateUser(user dto.) entity.User
-	FindByEmail(email string) (*entity.User, error)
-	IsDuplicateEmail(email string) bool
 }
 
 type authService struct {
@@ -23,13 +24,26 @@ func NewAuthService(userRepo repo.UserRepository) AuthService {
 }
 
 func (c *authService) VerifyCredential(email string, password string) error {
+	user, err := c.userRepo.FindByEmail(email)
+	if err != nil {
+		return err
+	}
+
+	isValidPassword := comparePassword(user.Password, []byte(password))
+	if !isValidPassword {
+		return errors.New("failed to login. check your credential")
+	}
+
 	return nil
+
 }
 
-func (c *authService) FindByEmail(email string) (*entity.User, error) {
-	return nil, nil
-}
-
-func (c *authService) IsDuplicateEmail(email string) bool {
-	return false
+func comparePassword(hashedPwd string, plainPassword []byte) bool {
+	byteHash := []byte(hashedPwd)
+	err := bcrypt.CompareHashAndPassword(byteHash, plainPassword)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	return true
 }
