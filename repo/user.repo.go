@@ -12,7 +12,7 @@ type UserRepository interface {
 	InsertUser(user entity.User) (entity.User, error)
 	UpdateUser(user entity.User) (entity.User, error)
 	FindByEmail(email string) (entity.User, error)
-	ProfileUser(userID int) (entity.User, error)
+	FindByUserID(userID string) (entity.User, error)
 }
 
 type userRepo struct {
@@ -44,8 +44,13 @@ func (c *userRepo) FindByEmail(email string) (entity.User, error) {
 	return user, nil
 }
 
-func (c *userRepo) ProfileUser(userID int) (entity.User, error) {
-	return entity.User{}, nil
+func (c *userRepo) FindByUserID(userID string) (entity.User, error) {
+	var user entity.User
+	res := c.connection.Where("id = ?", userID).Take(&user)
+	if res.Error != nil {
+		return user, res.Error
+	}
+	return user, nil
 }
 
 func hashAndSalt(pwd []byte) string {

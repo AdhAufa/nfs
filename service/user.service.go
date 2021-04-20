@@ -14,6 +14,7 @@ import (
 type UserService interface {
 	CreateUser(registerRequest dto.RegisterRequest) (*_user.UserResponse, error)
 	FindUserByEmail(email string) (*_user.UserResponse, error)
+	FindUserByID(userID string) (*_user.UserResponse, error)
 }
 
 type userService struct {
@@ -58,5 +59,20 @@ func (c *userService) FindUserByEmail(email string) (*_user.UserResponse, error)
 	}
 
 	userResponse := _user.NewUserResponse(user)
+	return &userResponse, nil
+}
+
+func (c *userService) FindUserByID(userID string) (*_user.UserResponse, error) {
+	user, err := c.userRepo.FindByUserID(userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	userResponse := _user.UserResponse{}
+	err = smapping.FillStruct(&userResponse, smapping.MapFields(&user))
+	if err != nil {
+		return nil, err
+	}
 	return &userResponse, nil
 }
