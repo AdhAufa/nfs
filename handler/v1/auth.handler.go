@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -53,7 +54,7 @@ func (c *authHandler) Login(ctx *gin.Context) {
 
 	user, _ := c.userService.FindUserByEmail(loginRequest.Email)
 
-	token := c.jwtService.GenerateToken(strconv.FormatInt(user.ID, 64))
+	token := c.jwtService.GenerateToken(strconv.FormatInt(user.ID, 10))
 	user.Token = token
 	response := errors.BuildResponse(true, "OK!", user)
 	ctx.JSON(http.StatusOK, response)
@@ -72,12 +73,13 @@ func (c *authHandler) Register(ctx *gin.Context) {
 
 	user, err := c.userService.CreateUser(registerRequest)
 	if err != nil {
-		response := errors.BuildErrorResponse("Something gone wrong", err.Error(), obj.EmptyObj{})
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
+		response := errors.BuildErrorResponse(err.Error(), err.Error(), obj.EmptyObj{})
+		ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, response)
 		return
 	}
 
-	token := c.jwtService.GenerateToken(strconv.FormatInt(user.ID, 64))
+	fmt.Printf("%v", user)
+	token := c.jwtService.GenerateToken(strconv.FormatInt(user.ID, 10))
 	user.Token = token
 	response := errors.BuildResponse(true, "OK!", user)
 	ctx.JSON(http.StatusOK, response)

@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/adhaufa/nfs/dto"
-	"github.com/adhaufa/nfs/entity"
 	"github.com/adhaufa/nfs/repo"
 	_user "github.com/adhaufa/nfs/service/user"
 	"github.com/mashingan/smapping"
@@ -31,21 +30,21 @@ func (c *userService) CreateUser(registerRequest dto.RegisterRequest) (*_user.Us
 	user, err := c.userRepo.FindByEmail(registerRequest.Email)
 
 	if err == nil {
-		return nil, errors.New("User already exists!")
+		return nil, errors.New("user already exists")
 	}
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 
-	userEntity := entity.User{}
-	err = smapping.FillStruct(&userEntity, smapping.MapFields(&user))
+	err = smapping.FillStruct(&user, smapping.MapFields(&registerRequest))
+
 	if err != nil {
 		log.Fatalf("Failed map %v", err)
 		return nil, err
 	}
 
-	user, _ = c.userRepo.InsertUser(userEntity)
+	user, _ = c.userRepo.InsertUser(user)
 	res := _user.NewUserResponse(user)
 	return &res, nil
 

@@ -26,6 +26,8 @@ func NewAuthService(userRepo repo.UserRepository) AuthService {
 func (c *authService) VerifyCredential(email string, password string) error {
 	user, err := c.userRepo.FindByEmail(email)
 	if err != nil {
+		println("hehe")
+		println(err.Error())
 		return err
 	}
 
