@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/adhaufa/nfs/config"
 	v1 "github.com/adhaufa/nfs/handler/v1"
+	"github.com/adhaufa/nfs/middleware"
 	"github.com/adhaufa/nfs/repo"
 	"github.com/adhaufa/nfs/service"
 	"github.com/gin-gonic/gin"
@@ -18,8 +19,8 @@ var (
 	userService    service.UserService    = service.NewUserService(userRepo)
 	productService service.ProductService = service.NewProductService(productRepo)
 	authHandler    v1.AuthHandler         = v1.NewAuthHandler(authService, jwtService, userService)
-	userHandler    v1.UserHandler         = v1.NewUserHandler(userService)
-	productHandler v1.ProductHandler      = v1.NewProductHandler(productService)
+	userHandler    v1.UserHandler         = v1.NewUserHandler(userService, jwtService)
+	productHandler v1.ProductHandler      = v1.NewProductHandler(productService, jwtService)
 )
 
 func main() {
@@ -32,15 +33,19 @@ func main() {
 		authRoutes.POST("/register", authHandler.Register)
 	}
 
-	userRoutes := server.Group("api/user")
+	userRoutes := server.Group("api/user", middleware.AuthorizeJWT(jwtService))
 	{
 		userRoutes.GET("/profile", userHandler.Profile)
+		userRoutes.PUT("/profile", userHandler.Update)
 	}
 
-	productRoutes := server.Group("api/product")
+	productRoutes := server.Group("api/product", middleware.AuthorizeJWT(jwtService))
 	{
+		productRoutes.GET("/", productHandler.All)
 		productRoutes.POST("/", productHandler.CreateProduct)
 		productRoutes.GET("/:id", productHandler.FindOneProductByID)
+		productRoutes.PUT("/:id", productHandler.UpdateProduct)
+		productRoutes.DELETE("/:id", productHandler.DeleteProduct)
 	}
 
 	checkRoutes := server.Group("api/check")

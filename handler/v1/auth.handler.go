@@ -1,12 +1,11 @@
 package v1
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
-	"github.com/adhaufa/nfs/common/errors"
 	"github.com/adhaufa/nfs/common/obj"
+	"github.com/adhaufa/nfs/common/response"
 	"github.com/adhaufa/nfs/dto"
 	"github.com/adhaufa/nfs/service"
 	"github.com/gin-gonic/gin"
@@ -40,14 +39,14 @@ func (c *authHandler) Login(ctx *gin.Context) {
 	err := ctx.ShouldBind(&loginRequest)
 
 	if err != nil {
-		response := errors.BuildErrorResponse("Failed to process request", err.Error(), obj.EmptyObj{})
+		response := response.BuildErrorResponse("Failed to process request", err.Error(), obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
 
 	err = c.authService.VerifyCredential(loginRequest.Email, loginRequest.Password)
 	if err != nil {
-		response := errors.BuildErrorResponse("Failed to login", err.Error(), obj.EmptyObj{})
+		response := response.BuildErrorResponse("Failed to login", err.Error(), obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 		return
 	}
@@ -56,7 +55,7 @@ func (c *authHandler) Login(ctx *gin.Context) {
 
 	token := c.jwtService.GenerateToken(strconv.FormatInt(user.ID, 10))
 	user.Token = token
-	response := errors.BuildResponse(true, "OK!", user)
+	response := response.BuildResponse(true, "OK!", user)
 	ctx.JSON(http.StatusOK, response)
 
 }
@@ -66,22 +65,21 @@ func (c *authHandler) Register(ctx *gin.Context) {
 
 	err := ctx.ShouldBind(&registerRequest)
 	if err != nil {
-		response := errors.BuildErrorResponse("Failed to process request", err.Error(), obj.EmptyObj{})
+		response := response.BuildErrorResponse("Failed to process request", err.Error(), obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
 
 	user, err := c.userService.CreateUser(registerRequest)
 	if err != nil {
-		response := errors.BuildErrorResponse(err.Error(), err.Error(), obj.EmptyObj{})
+		response := response.BuildErrorResponse(err.Error(), err.Error(), obj.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusUnprocessableEntity, response)
 		return
 	}
 
-	fmt.Printf("%v", user)
 	token := c.jwtService.GenerateToken(strconv.FormatInt(user.ID, 10))
 	user.Token = token
-	response := errors.BuildResponse(true, "OK!", user)
-	ctx.JSON(http.StatusOK, response)
+	response := response.BuildResponse(true, "OK!", user)
+	ctx.JSON(http.StatusCreated, response)
 
 }

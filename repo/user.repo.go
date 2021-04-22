@@ -32,7 +32,16 @@ func (c *userRepo) InsertUser(user entity.User) (entity.User, error) {
 }
 
 func (c *userRepo) UpdateUser(user entity.User) (entity.User, error) {
-	return entity.User{}, nil
+	if user.Password != "" {
+		user.Password = hashAndSalt([]byte(user.Password))
+	} else {
+		var tempUser entity.User
+		c.connection.Find(&tempUser, user.ID)
+		user.Password = tempUser.Password
+	}
+
+	c.connection.Save(&user)
+	return user, nil
 }
 
 func (c *userRepo) FindByEmail(email string) (entity.User, error) {

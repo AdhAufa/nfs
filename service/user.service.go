@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/adhaufa/nfs/dto"
+	"github.com/adhaufa/nfs/entity"
 	"github.com/adhaufa/nfs/repo"
 	_user "github.com/adhaufa/nfs/service/user"
 	"github.com/mashingan/smapping"
@@ -13,6 +14,7 @@ import (
 
 type UserService interface {
 	CreateUser(registerRequest dto.RegisterRequest) (*_user.UserResponse, error)
+	UpdateUser(updateUserRequest dto.UpdateUserRequest) (*_user.UserResponse, error)
 	FindUserByEmail(email string) (*_user.UserResponse, error)
 	FindUserByID(userID string) (*_user.UserResponse, error)
 }
@@ -25,6 +27,24 @@ func NewUserService(userRepo repo.UserRepository) UserService {
 	return &userService{
 		userRepo: userRepo,
 	}
+}
+
+func (c *userService) UpdateUser(updateUserRequest dto.UpdateUserRequest) (*_user.UserResponse, error) {
+	user := entity.User{}
+	err := smapping.FillStruct(&user, smapping.MapFields(&updateUserRequest))
+
+	if err != nil {
+		return nil, err
+	}
+
+	user, err = c.userRepo.UpdateUser(user)
+	if err != nil {
+		return nil, err
+	}
+
+	res := _user.NewUserResponse(user)
+	return &res, nil
+
 }
 
 func (c *userService) CreateUser(registerRequest dto.RegisterRequest) (*_user.UserResponse, error) {
