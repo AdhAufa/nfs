@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"ahmadalbar@gmail.com\",\n    \"password\": \"yudhanewbie\"\n}",
+							"raw": "{\n    \"email\": \"aldian@gmail.com\",\n    \"password\": \"yudhanewbie\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,7 +44,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Ahmad Albar\",\n    \"email\": \"ahmadalbar@gmail.com\",\n    \"password\": \"yudhanewbie\"\n}",
+							"raw": "{\n    \"name\": \"Aldian Akadita S\",\n    \"email\": \"aldian@gmail.com\",\n    \"password\": \"yudhanewbie\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -70,7 +70,13 @@
 					"name": "Profile",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMiIsImV4cCI6MTY1MDY0MzM5NiwiaWF0IjoxNjE5MTA3Mzk2LCJpc3MiOiJBdWZhIEFsYWluYSBBZGhhciJ9.OxyAfCKz0Sb7VnqKHWLu0PVzsHn1uwQqwKfy4P3_-hY",
+								"type": "text"
+							}
+						],
 						"url": {
 							"raw": "localhost:8080/api/user/profile",
 							"host": [
@@ -89,9 +95,35 @@
 				{
 					"name": "Update User",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": null
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMiIsImV4cCI6MTY1MDY0MzM5NiwiaWF0IjoxNjE5MTA3Mzk2LCJpc3MiOiJBdWZhIEFsYWluYSBBZGhhciJ9.OxyAfCKz0Sb7VnqKHWLu0PVzsHn1uwQqwKfy4P3_-hY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Prieyudha Akadita S\",\n    \"email\": \"ahmadalbar@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/user/profile",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
 					},
 					"response": []
 				}
@@ -103,9 +135,40 @@
 				{
 					"name": "Create Product",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": null
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMiIsImV4cCI6MTY1MDY0MzM5NiwiaWF0IjoxNjE5MTA3Mzk2LCJpc3MiOiJBdWZhIEFsYWluYSBBZGhhciJ9.OxyAfCKz0Sb7VnqKHWLu0PVzsHn1uwQqwKfy4P3_-hY",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMyIsImV4cCI6MTY1MDY0NzQxNywiaWF0IjoxNjE5MTExNDE3LCJpc3MiOiJBdWZhIEFsYWluYSBBZGhhciJ9.Z8SQgYjQKv7c3i5MJ8nsOT7_A2RX3mLSvSB8wDpzyxU",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mie Sedaap Goreng\",\n    \"price\": 3000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/product",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product"
+							]
+						}
 					},
 					"response": []
 				},
@@ -113,8 +176,25 @@
 					"name": "Find One Product By ID",
 					"request": {
 						"method": "GET",
-						"header": [],
-						"url": null
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMiIsImV4cCI6MTY1MDY0MzM5NiwiaWF0IjoxNjE5MTA3Mzk2LCJpc3MiOiJBdWZhIEFsYWluYSBBZGhhciJ9.OxyAfCKz0Sb7VnqKHWLu0PVzsHn1uwQqwKfy4P3_-hY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/api/product/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product",
+								"1"
+							]
+						}
 					},
 					"response": []
 				},
@@ -131,7 +211,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Mie\",\n    \"price\": 8000\n}",
+							"raw": "{\n    \"name\": \"YSSSS\",\n    \"price\": 8000\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -156,9 +236,26 @@
 				{
 					"name": "Delete Product",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": null
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMyIsImV4cCI6MTY1MDY0NzQxNywiaWF0IjoxNjE5MTExNDE3LCJpc3MiOiJBdWZhIEFsYWluYSBBZGhhciJ9.Z8SQgYjQKv7c3i5MJ8nsOT7_A2RX3mLSvSB8wDpzyxU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/api/product/3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"product",
+								"3"
+							]
+						}
 					},
 					"response": []
 				},
@@ -174,15 +271,14 @@
 							}
 						],
 						"url": {
-							"raw": "localhost:8080/api/product/1",
+							"raw": "localhost:8080/api/product",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"api",
-								"product",
-								"1"
+								"product"
 							]
 						}
 					},
